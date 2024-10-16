@@ -4,7 +4,7 @@ terraform {
     organization = "cloud-leomontt" 
 
     workspaces { 
-      name = "sagemaker" 
+      name = "impacta" 
     } 
   } 
 }
