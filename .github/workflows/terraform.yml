@@ -1,4 +1,4 @@
-name: 'Terraform CI/CD Pipeline'
+name: 'Terraform Deploy'
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   terraform:
-    name: 'Terraform Pipeline'
+    name: 'Deploy'
     runs-on: ubuntu-latest
 
     steps:
@@ -20,7 +20,7 @@ jobs:
       - name: 'Setup Terraform'
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.5.0 # Defina a versão desejada do Terraform
+          terraform_version: 1.5.0
 
       # Step 3: Configure AWS Credentials
       - name: 'Configure AWS Credentials'
@@ -28,7 +28,8 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1 # Ajuste a região de acordo com sua necessidade
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
 
       # Step 4: Terraform Init
       - name: 'Terraform Init'
