@@ -49,119 +49,6 @@ module "sg_http" {
   }
 }
 
-// Security Group Custom 1
-module "sg_custom_1" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/SecurityGroup/Custom"
-
-  name = "${var.name}-all-custom-1"
-  vpc_id  = "vpc-0b64f4e753bd58a43"
-  
-  ingress_with_cidr_blocks = [
-    {
-      from_port   = 8080
-      to_port     = 8080
-      protocol    = "tcp"
-      description = "http access from internal network"
-      cidr_blocks = "10.10.10.0/24"
-    },
-    {
-      from_port   = 443
-      to_port     = 443
-      protocol    = "tcp"
-      description = "https access from internal network"
-      cidr_blocks = "10.10.10.0/24" 
-    },
-    {
-      from_port   = 3306
-      to_port     = 3306
-      protocol    = "tcp"
-      description = "Mysql access from internal network"
-      cidr_blocks = "192.168.10.0/24" 
-    },
-    {
-      from_port   = 22
-      to_port     = 22
-      protocol    = "tcp"
-      description = "ssh access from internal network"
-      cidr_blocks = "10.10.10.0/24"
-    }
-  ]
-
-  egress_with_cidr_blocks = [
-    {
-      from_port   = 0
-      to_port     = 65535
-      protocol    = -1
-      description = "anywhere"
-      cidr_blocks = "0.0.0.0/0"
-    }
-  ]
-
-  tags = {
-    "Name" = "${var.name}-all-custom-1"
-  }
-}
-
-// Security Group Custom 2
-module "sg_custom_2" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/SecurityGroup/Custom"
-
-  name   = "${var.name}-all-custom-2"
-  vpc_id  = "vpc-0b64f4e753bd58a43"
-
-  ingress_with_cidr_blocks = [
-    {
-      from_port   = 8080
-      to_port     = 8080
-      protocol    = "tcp"
-      description = "http access from internal network"
-      cidr_blocks = "10.10.10.0/24"
-    },
-    {
-      from_port   = 443
-      to_port     = 443
-      protocol    = "tcp"
-      description = "https access from internal network"
-      cidr_blocks = "10.10.10.0/24" 
-    },
-    {
-      from_port   = 3306
-      to_port     = 3306
-      protocol    = "tcp"
-      description = "Mysql access from internal network"
-      cidr_blocks = "192.168.10.0/24" 
-    },
-    {
-      from_port   = 22
-      to_port     = 22
-      protocol    = "tcp"
-      description = "ssh access from internal network"
-      cidr_blocks = "10.10.10.0/24"
-    }
-  ]
-
-  egress_with_cidr_blocks = [
-    {
-      from_port   = 0
-      to_port     = 65535
-      protocol    = -1
-      description = "anywhere"
-      cidr_blocks = "10.0.0.0/16"
-    },
-    {
-      from_port   = 22
-      to_port     = 22
-      protocol    = 6
-      description = "anywhere"
-      cidr_blocks = "10.10.10.0/24"
-    }
-  ]
-  tags = {
-    "Name" = "${var.name}-all-custom-2"
-  }
-}
-
-
 
 
 ###############################################################################################
@@ -175,7 +62,7 @@ module "alb" {
   name    = "${var.name}-alb"
   vpc_id  = "vpc-0b64f4e753bd58a43"
   subnets = ["subnet-0d12adc35523a85ac", "subnet-0d64ef80e224172bd", "subnet-0a6aac5ecd6d4b1bb"]
-  security_groups = [ module.sg_custom_1.sg_id ]
+  security_groups = [ module.sg_http.sg_id ]
 
   enable_deletion_protection = false
   // Listener with redirect
@@ -209,57 +96,6 @@ module "alb" {
 
 
 
-module "nlb_internal" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/LB"
-
-  name    = "${var.name}-nlb-internal-jfrog"
-  vpc_id  = "vpc-0b64f4e753bd58a43"
-  subnets = ["subnet-0d12adc35523a85ac", "subnet-0d64ef80e224172bd", "subnet-0a6aac5ecd6d4b1bb"]
-  security_groups = [ module.sg_custom_1.sg_id ]
-
-  load_balancer_type         = "network"
-  enable_deletion_protection = false
-  internal = true
-  enable_cross_zone_load_balancing = true
-  tags = {
-    "Name" = "jfrog-artifactory-nlb"
-  }
-  // Listeners
-  listeners = {
-    // Primeiro Listener
-    tcp_8082 = {
-      port     = 8082
-      protocol = "TCP"
-
-      forward = {
-        target_group_key = "jfrog-artifactory-tg"
-      }
-    },
-    // Segundo Listener
-    tcp_8080 = {
-      port     = 8080
-      protocol = "TCP"
-
-      forward = {
-        target_group_key = "jfrog-artifactory-tg"
-      }
-    }
-  }
-  // Inicio Target Group
-  target_groups = {
-    // Primeiro targetgroup
-    jfrog-artifactory-tg = {
-      protocol    = "TCP"
-      port        = 8082
-      target_type = "instance"
-      target_id   = module.wf-instance-02.instance_id    // Obrigatorio target_id
-    }
-  }
-// Fim Target Group
-}
-
-
-
 ###############################################################################################
 #                                         EC2 MODULE                                          #
 ###############################################################################################
@@ -279,7 +115,7 @@ module "wf-instance-01" {
   kms_key_alias          = "alias/default"
   associate_public_ip    = false
   monitoring             = false
-  vpc_security_group_ids = [ module.sg_custom_1.sg_id, module.sg_custom_2.sg_id ]
+  vpc_security_group_ids = [ module.sg_http.sg_id ]
 
   tags = {
     "Name" = "${var.name}-instance-01"
@@ -302,6 +138,8 @@ module "wf-instance-02" {
   associate_public_ip     = false
   monitoring              = false
   vpc_security_group_ids  = [ module.sg_http.sg_id ]
+  associate_ec2_to_lb     = true
+  target_group_arn        = module.alb.target_group_arn
 
   tags = {
     "Name" = "${var.name}-instance-02"

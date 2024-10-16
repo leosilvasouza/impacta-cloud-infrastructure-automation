@@ -40,7 +40,7 @@ variable "name" {
 
 // IAM-Role module
 module "iam_roles" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/IAM-Roles?ref=v0.0.1"
+  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/IAM-Roles"
 
   name          = var.name
 
@@ -51,7 +51,7 @@ module "iam_roles" {
 
 // IAM-Policies managed AWS
 module "iam_policy_managed_sqs" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/IAM-Policies_managed?ref=v0.0.1"
+  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/IAM-Policies_managed"
   depends_on = [ module.iam_roles ]
 
   policy_managed_arn = "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
@@ -59,7 +59,7 @@ module "iam_policy_managed_sqs" {
 }
 
 module "iam_policy_managed_dynamodb" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/IAM-Policies_managed?ref=v0.0.1"
+  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/IAM-Policies_managed"
   depends_on = [ module.iam_roles ]
 
   policy_managed_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
@@ -68,7 +68,7 @@ module "iam_policy_managed_dynamodb" {
 
 // IAM-Policies managed yourself
 module "iam_policy_ec2" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/IAM-Policies_custom?ref=v0.0.1"
+  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/IAM-Policies_custom"
   depends_on = [ module.iam_roles ]
 
   policy_name        = "ec2_customized_policy"
@@ -79,7 +79,7 @@ module "iam_policy_ec2" {
 }
 
 module "iam_policy_s3" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/IAM-Policies_custom?ref=v0.0.1"
+  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/IAM-Policies_custom"
   depends_on = [ module.iam_roles ]
 
   policy_name        = "s3_customized_policy"
@@ -95,7 +95,7 @@ module "iam_policy_s3" {
 ###############################################################################################
 
 module "sg_http" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/SecurityGroup/webfarm-sg-http-80?ref=v0.0.1"
+  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/SecurityGroup/webfarm-sg-http-80"
 
   name = "${var.name}-http-80"
   vpc_id  = "vpc-05fbbf774e5d5bf4c" 
@@ -133,7 +133,7 @@ module "sg_http" {
 
 // Security Group Custom 1
 module "sg_custom_1" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/SecurityGroup/Custom?ref=v0.0.1"
+  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/SecurityGroup/Custom"
 
   name = "${var.name}-all-custom-1"
   vpc_id  = "vpc-05fbbf774e5d5bf4c"
@@ -186,7 +186,7 @@ module "sg_custom_1" {
 
 // Security Group Custom 2
 module "sg_custom_2" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/SecurityGroup/Custom?ref=v0.0.1"
+  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/SecurityGroup/Custom"
 
   name   = "${var.name}-all-custom-2"
   vpc_id  = "vpc-xxxxxxxxxxxxxxxxx"
@@ -249,7 +249,7 @@ module "sg_custom_2" {
 ###############################################################################################
 
 module "alb" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/LB?ref=v0.0.1"
+  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/LB"
   depends_on = [ module.wf-instance-02 ]
 
   name    = "${var.name}-alb"
@@ -290,7 +290,7 @@ module "alb" {
 
 
 module "nlb_interno" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/LB?ref=v0.0.1"
+  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/LB"
 
   name    = "${var.name}-nlb-interno"
   vpc_id  = "vpc-xxxxxxxxxxxx"
@@ -347,7 +347,7 @@ module "nlb_interno" {
 # Instance standalone, windows, with adittional EBS Volume, without associate to ALB through target_group_arn variable, without instance profile association
 
 module "wf-instance-01" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/EC2?ref=v0.0.1"
+  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/EC2"
   depends_on = [ module.sg_custom_1, module.sg_custom_2 ]
 
   name                   = "${var.name}-instance-01"
@@ -368,7 +368,7 @@ module "wf-instance-01" {
 # Instance windows, with adittional EBS Volume, with association to ALB, with instance profile association
 
 module "wf-instance-03" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/EC2?ref=v0.0.1"
+  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/EC2"
   depends_on = [ module.alb, module.sg_http, module.sg_custom_1 ]
 
   name                    = "${var.name}-instance-03"
@@ -391,13 +391,13 @@ module "wf-instance-03" {
 
 # Instance windows, with adittional EBS Volume, with association to ALB, with instance profile association
 module "wf-instance-04" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/EC2?ref=v0.0.1"
+  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/EC2"
 
   depends_on = [ module.sg_http, module.sg_custom_1, module.sg_custom_2, module.alb ]
 
   name                    = "${var.name}-instance-04"
   ami_id                  = "ami-0c9890fb99eafa637" # Microsoft Windows Server 2019 Base
-  #os_instance             = "windows"
+  os_instance             = "windows"
   key_name                = "key-webfarm-windows"
 
   create_instance_profile = true
@@ -419,7 +419,7 @@ module "wf-instance-04" {
 ###############################################################################################
 
 module "ebs_volumes_wf-instance-01" {
-  source       = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/EBS?ref=v0.0.1"
+  source       = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/EBS"
 
   instance_id  = module.wf-instance-01.instance_id
   depends_on = [ module.wf-instance-01 ]
@@ -455,7 +455,7 @@ module "ebs_volumes_wf-instance-01" {
 
 
 module "ebs_volumes_wf-instance-03" {
-  source       = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/EBS?ref=v0.0.1"
+  source       = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/EBS"
 
   instance_id  = module.wf-instance-03.instance_id
   depends_on = [ module.wf-instance-03 ]
@@ -478,7 +478,7 @@ module "ebs_volumes_wf-instance-03" {
 }
 
 module "ebs_volumes_wf-instance-04" {
-  source       = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/EBS?ref=v0.0.1"
+  source       = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/EBS"
 
   instance_id  = module.wf-instance-04.instance_id
   depends_on = [ module.wf-instance-04 ]
