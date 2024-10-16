@@ -9,57 +9,6 @@ variable "name" {
 
 
 ###############################################################################################
-#                                         IAM MODULE                                          #
-###############################################################################################
-
-// IAM-Role module
-module "iam_roles" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/IAM-Roles"
-
-  name          = var.name
-
-  tags_iam_role = { 
-    Name        = var.name
-  }
-}
-
-// IAM-Policies managed AWS
-module "iam_policy_managed_sqs" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/IAM-Policies_managed"
-  depends_on = [ module.iam_roles ]
-
-  policy_managed_arn = "arn:aws:iam::aws:policy/AmazonSQSFullAccess"
-  role_attach_policy_managed_name = module.iam_roles.iam_role_name
-}
-
-
-// IAM-Policies managed yourself
-module "iam_policy_ec2" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/IAM-Policies_custom"
-  depends_on = [ module.iam_roles ]
-
-  policy_name        = "ec2_customized_policy"
-  policy_description = "Custom policy to ec2 resources"
-  policy_path        = "/"
-  policy_document    = file("./json_policy/ec2_policy.json")
-  role_attach_policy_managed_name = module.iam_roles.iam_role_name
-}
-
-module "iam_policy_s3" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/IAM-Policies_custom"
-  depends_on = [ module.iam_roles ]
-
-  policy_name        = "s3_customized_policy"
-  policy_description = "Custom policy to S3 resources"
-  policy_path        = "/"
-  policy_document    = file("./json_policy/s3_policy.json")
-  role_attach_policy_managed_name = module.iam_roles.iam_role_name
-}
-
-
-
-
-###############################################################################################
 #                                         SG MODULE                                           #
 ###############################################################################################
 
@@ -349,7 +298,6 @@ module "wf-instance-02" {
   key_name                = "key-ec2-linux"
   
   create_instance_profile = true
-  iam_instance_profile    = "${var.name}_instance_profile-02"
   instance_type           = "t2.micro"
   associate_public_ip     = false
   monitoring              = false
