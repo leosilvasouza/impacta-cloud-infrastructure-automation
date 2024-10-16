@@ -20,7 +20,8 @@ jobs:
       - name: 'Setup Terraform'
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.5.0
+          terraform_version: 1.9.7
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
       # Step 3: Configure AWS Credentials
       - name: 'Configure AWS Credentials'
