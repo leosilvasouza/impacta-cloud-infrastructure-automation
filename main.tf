@@ -49,53 +49,6 @@ module "sg_http" {
   }
 }
 
-
-
-###############################################################################################
-#                                         LB MODULE                                           #
-###############################################################################################
-
-module "alb" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/LB"
-  depends_on = [ module.wf-instance-01 ]
-
-  name    = "${var.name}-alb"
-  vpc_id  = "vpc-0b64f4e753bd58a43"
-  subnets = ["subnet-0d12adc35523a85ac", "subnet-0d64ef80e224172bd", "subnet-0a6aac5ecd6d4b1bb"]
-  security_groups = [ module.sg_http.sg_id ]
-
-  enable_deletion_protection = false
-  // Listener with redirect
-  listeners = {
-    // Inicio do Primeiro listener
-    http = {
-      port     = 80
-      protocol = "HTTP"
-      redirect = {
-        port        = "443"
-        protocol    = "HTTPS"
-        status_code = "HTTP_301"
-      }
-    },
-  }   
-  // Inicio Target Group
-  target_groups = {
-    instance = {
-      name_prefix = "tg-"
-      protocol    = "HTTP"
-      port        = 80
-      target_type = "instance"
-      target_id   = module.wf-instance-01.instance_id   // Obrigatorio target_id se for instance em target_type
-    }
-  }
-// Fim Target Group
-  tags = {
-    "Environment" = "Dev"
-  }
-}
-
-
-
 ###############################################################################################
 #                                         EC2 MODULE                                          #
 ###############################################################################################
@@ -121,32 +74,6 @@ module "wf-instance-01" {
     "Name" = "${var.name}-instance-01"
   }
 }
-
-# Instance standalone, linux, without adittional EBS Volume, without associate to ALB through target_group_arn variable, with instance profile association
-
-module "wf-instance-02" {
-  source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/EC2"
-  depends_on = [ module.sg_http ]
-
-  name                    = "${var.name}-instance-02"
-  ami_name                = "ami-linux-basic"
-  os_instance             = "linux"
-  key_name                = "key-ec2-linux"
-  
-  create_instance_profile = false
-  instance_type           = "t2.micro"
-  associate_public_ip     = false
-  monitoring              = false
-  vpc_security_group_ids  = [ module.sg_http.sg_id ]
-  associate_ec2_to_lb     = true
-  target_group_arn        = module.alb.target_group_arn
-
-  tags = {
-    "Name" = "${var.name}-instance-02"
-  }
-}
-
-
 
 ###############################################################################################
 #                                         EBS MODULE                                          #
