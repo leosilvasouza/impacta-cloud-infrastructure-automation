@@ -109,39 +109,6 @@ module "ebs_volumes_wf-instance-01" {
       tags        = {
         Name = "MeuVolume2-nainstancia1"
       }
-    },
-    {
-      device_name          = "/dev/sdh"
-      volume_size          = 30
-      volume_type          = "gp2"
-      iops                 = 100
-      final_snapshot       = false
-      multi_attach_enabled = false
-      tags        = {
-        Name = "MeuVolume3-nainstancia1"
-      }
-    },        
-    {
-      device_name          = "/dev/sdi"
-      volume_size          = 10
-      volume_type          = "gp2"
-      iops                 = 100
-      final_snapshot       = false
-      multi_attach_enabled = false
-      tags        = {
-        Name = "MeuVolume4-nainstancia1"
-      }
-    },
-    {
-      device_name          = "/dev/sdj"
-      volume_size          = 20
-      volume_type          = "gp2"
-      iops                 = 100
-      final_snapshot       = false
-      multi_attach_enabled = false
-      tags        = {
-        Name = "MeuVolume5-nainstancia1"
-      }
     }       
     // Adicione quantos volumes EBS adicionais desejar aqui
   ]
