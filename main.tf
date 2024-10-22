@@ -104,7 +104,7 @@ module "alb" {
 
 module "wf-instance-01" {
   source = "git::https://github.com/leosilvasouza/impacta-cloud-infrastructure-automation.git//modules/EC2"
-  depends_on = [ module.sg_custom_1, module.sg_custom_2 ]
+  depends_on = [ module.sg_http ]
 
   name                   = "${var.name}-instance-01"
   ami_name               = "ami-windows-2019-basic"
