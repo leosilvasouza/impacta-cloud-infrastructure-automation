@@ -113,7 +113,6 @@ module "wf-instance-01" {
 
   create_instance_profile = false
   instance_type          = "t2.micro"
-  kms_key_alias          = "alias/default"
   associate_public_ip    = false
   monitoring             = false
   vpc_security_group_ids = [ module.sg_http.sg_id ]
@@ -136,7 +135,6 @@ module "wf-instance-02" {
   
   create_instance_profile = false
   instance_type           = "t2.micro"
-  kms_key_alias          = "alias/default"
   associate_public_ip     = false
   monitoring              = false
   vpc_security_group_ids  = [ module.sg_http.sg_id ]
