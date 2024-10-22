@@ -150,7 +150,7 @@ variable "environment" {
 
 variable "kms_key_alias" {
   type    = string
-  default = "alias/hdi_default"
+  default = "alias/default"
 }
 
 variable "tag_root_block_device" {
