@@ -9,7 +9,6 @@ variable "ebs_volumes" {
     volume_size    = number
     volume_type    = string
     iops           = number
-    encrypted      = bool
     final_snapshot = bool
     tags           = map(string)
     multi_attach_enabled = bool
@@ -20,7 +19,6 @@ variable "ebs_volumes" {
     volume_size    = 100
     volume_type    = "gp2"
     iops           = 100
-    encrypted      = true
     final_snapshot = false
     tags = {
         Name = "/dev/sdf"
@@ -29,9 +27,4 @@ variable "ebs_volumes" {
     multi_attach_enabled = false  
     }
   ]
-}
-
-variable "kms_key_alias" {
-  type    = string
-  default = "alias/hdi_default"
 }
