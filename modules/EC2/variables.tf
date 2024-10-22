@@ -148,10 +148,6 @@ variable "environment" {
   default     = "dev"
 }
 
-variable "kms_key_alias" {
-  type    = string
-}
-
 variable "tag_root_block_device" {
   type    = string
   default = "Root"
