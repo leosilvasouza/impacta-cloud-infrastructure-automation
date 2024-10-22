@@ -160,16 +160,12 @@ module "ebs_volumes_wf-instance-01" {
   instance_id   = module.wf-instance-01.instance_id
   depends_on    = [ module.wf-instance-01 ]
   
-  kms_key_alias = "alias/default"
-
   ebs_volumes = [
     {
       device_name          = "/dev/sdf"
       volume_size          = 50
       volume_type          = "gp2"
       iops                 = 100
-      encrypted            = true
-      kms_key_alias        = "alias/default"
       final_snapshot       = false
       multi_attach_enabled = false
       tags        = {
@@ -181,7 +177,6 @@ module "ebs_volumes_wf-instance-01" {
       volume_size          = 40
       volume_type          = "gp2"
       iops                 = 100
-      encrypted            = true
       final_snapshot       = false
       multi_attach_enabled = false
       tags        = {
@@ -193,7 +188,6 @@ module "ebs_volumes_wf-instance-01" {
       volume_size          = 30
       volume_type          = "gp2"
       iops                 = 100
-      encrypted            = true
       final_snapshot       = false
       multi_attach_enabled = false
       tags        = {
@@ -205,7 +199,6 @@ module "ebs_volumes_wf-instance-01" {
       volume_size          = 10
       volume_type          = "gp2"
       iops                 = 100
-      encrypted            = true
       final_snapshot       = false
       multi_attach_enabled = false
       tags        = {
@@ -217,7 +210,6 @@ module "ebs_volumes_wf-instance-01" {
       volume_size          = 20
       volume_type          = "gp2"
       iops                 = 100
-      encrypted            = true
       final_snapshot       = false
       multi_attach_enabled = false
       tags        = {
