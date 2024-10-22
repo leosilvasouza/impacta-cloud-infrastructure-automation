@@ -51,11 +51,6 @@ resource "aws_instance" "this" {
   monitoring                           = var.monitoring
   get_password_data                    = var.get_password_data
 
-  root_block_device {
-    encrypted             = true
-    kms_key_id            = data.aws_kms_alias.root_block_ebs.target_key_arn
-  }
-
   ebs_block_device {
       device_name         = var.os_instance == "linux" ? var.name_ebs_pagefile_linux  : (var.os_instance == "windows" ? var.name_ebs_pagefile_windows  : "")
       encrypted           = true
