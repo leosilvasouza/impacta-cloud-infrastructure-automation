@@ -53,8 +53,6 @@ resource "aws_instance" "this" {
 
   ebs_block_device {
       device_name         = var.os_instance == "linux" ? var.name_ebs_pagefile_linux  : (var.os_instance == "windows" ? var.name_ebs_pagefile_windows  : "")
-      encrypted           = true
-      kms_key_id          = data.aws_kms_alias.root_block_ebs.target_key_arn
     }
 
   associate_public_ip_address          = var.associate_public_ip
