@@ -10,11 +10,9 @@ resource "aws_ebs_volume" "additional_volumes" {
   count = length(var.ebs_volumes)
 
   availability_zone = data.aws_instance.instance.availability_zone
-  kms_key_id        = data.aws_kms_alias.kms_key.id
   size              = var.ebs_volumes[count.index].volume_size
   type              = var.ebs_volumes[count.index].volume_type
   iops              = var.ebs_volumes[count.index].volume_type == "gp3" ? var.ebs_volumes[count.index].iops : null
-  encrypted         = var.ebs_volumes[count.index].encrypted
   final_snapshot    = var.ebs_volumes[count.index].final_snapshot
   tags              = var.ebs_volumes[count.index].tags
   multi_attach_enabled = var.ebs_volumes[count.index].multi_attach_enabled
@@ -30,8 +28,4 @@ resource "aws_volume_attachment" "attachment" {
 
 data "aws_instance" "instance" {
   instance_id = var.instance_id
-}
-
-data "aws_kms_alias" "kms_key" {
-  name = var.kms_key_alias
 }
