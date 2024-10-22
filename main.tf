@@ -107,10 +107,11 @@ module "wf-instance-01" {
   depends_on = [ module.sg_http ]
 
   name                   = "${var.name}-instance-01"
-  ami_name               = "ami-windows-2019-basic"
+  ami_name               = "ami-0324a83b82023f0b3"
   os_instance            = "windows"
   key_name               = "key-webfarm-windows"
-  
+
+  create_instance_profile = false
   instance_type          = "t2.micro"
   kms_key_alias          = "alias/default"
   associate_public_ip    = false
@@ -129,12 +130,13 @@ module "wf-instance-02" {
   depends_on = [ module.sg_http ]
 
   name                    = "${var.name}-instance-02"
-  ami_name                = "ami-linux-rhel7-basic"
+  ami_name                = "ami-06b21ccaeff8cd686"
   os_instance             = "linux"
   key_name                = "key-ec2-linux"
   
-  create_instance_profile = true
+  create_instance_profile = false
   instance_type           = "t2.micro"
+  kms_key_alias          = "alias/default"
   associate_public_ip     = false
   monitoring              = false
   vpc_security_group_ids  = [ module.sg_http.sg_id ]
